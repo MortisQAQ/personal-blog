@@ -108,7 +108,7 @@ function getSorted(items) {
 
 仓库内的正例：[contentUtils.ts](file:///d:/projects/playground/blog/apps/web/src/components/Blog/contentUtils.ts) 的 `filterArticles` / `articleSearchText` / `formatNumber` 都是纯函数，没有包装成 hook。
 
-补充：react.dev 还建议——当多个 Effect 需要大量协调时，把逻辑整个移出 Effect / Hook，让它成为「外部系统」（如 GSAP 时间线、鼠标跟随循环）。`useHomeDescent` 即此模式。
+补充：react.dev 还建议——当多个 Effect 需要大量协调时，把逻辑整个移出 Effect / Hook，让它成为「外部系统」（如 GSAP 时间线、鼠标跟随循环）。`useHomeDescent` 即此模式。跨页面的运行时信号（如 `src/utils/pageReady.ts` 的页面就绪事件与 `usePageReady`）同属外部系统，允许放在 `src/utils/`，不承载 ViewModel 派生逻辑。
 
 ## 6. 值不值得抽（防过早抽象）
 

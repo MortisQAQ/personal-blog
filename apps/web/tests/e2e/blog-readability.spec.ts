@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { openReadyBlog } from './blog-test-helpers'
 
 async function expectReadable(page: Page, selectors: [string, number][]) {
   const problems = await page.evaluate((rules) => {
@@ -64,6 +65,19 @@ const PORTFOLIO_RULES: [string, number][] = [
   ['.panel-page__register', 10],
 ]
 
+const HOME_ARCHIVE_RULES: [string, number][] = [
+  ['.home-archive-heading__code', 12],
+  ['.home-archive-heading__title', 32],
+  ['.home-archive-heading__caption', 16],
+  ['.home-archive-heading__rule', 12],
+  ['.home-page__articles .blog-main__toolbar h2', 20],
+  ['.home-page__articles .category-btn', 14],
+  ['.home-page__articles .blog-search input', 16],
+  ['.home-page__articles .blog-tag-filters button', 14],
+  ['.home-page__articles .featured-article__title', 16],
+  ['.home-page__articles .featured-article__summary', 16],
+]
+
 async function expectUnscaledDeck(page: Page) {
   const scales = await page.locator('.portfolio-card:not([hidden])').evaluateAll(cards => cards.map(card => {
     let scale = 1
@@ -99,6 +113,34 @@ async function expectDirectoryTextFits(page: Page) {
 }
 
 test.describe('文字可读性契约', () => {
+  test('首页二屏完整标题与目录文字保持可读', async ({ page }) => {
+    await openReadyBlog(page)
+    await expect(page.locator('#global-loading')).toHaveCount(0)
+    await page.getByRole('button', { name: '滑动查看文章' }).click()
+    await page.evaluate(() => document.fonts.ready)
+    await expect(page.locator('.home-archive-heading__title')).toHaveText(/NOTES\s*&\s*THOUGHTS\./)
+    await expect(page.locator('.home-archive-heading__caption')).toContainText('把好奇写成记录。')
+    const clipped = await page.locator('.home-archive-heading__title, .featured-article__title').evaluateAll(elements => elements.filter(element => {
+      const node = element as HTMLElement
+      const style = getComputedStyle(node)
+      const range = document.createRange()
+      range.selectNodeContents(node)
+      const text = range.getBoundingClientRect()
+      const bounds = node.getBoundingClientRect()
+      return node.scrollWidth > node.clientWidth + 2 || node.scrollHeight > node.clientHeight + 2
+        || text.left < bounds.left - 2 || text.right > bounds.right + 2
+        || style.textOverflow === 'ellipsis' || !['none', ''].includes(style.webkitLineClamp)
+    }).map(element => {
+      const node = element as HTMLElement
+      const style = getComputedStyle(node)
+      const range = document.createRange()
+      range.selectNodeContents(node)
+      return { text: node.textContent, width: [node.scrollWidth, node.clientWidth], height: [node.scrollHeight, node.clientHeight], bounds: node.getBoundingClientRect().toJSON(), textBounds: range.getBoundingClientRect().toJSON(), clamp: style.webkitLineClamp }
+    }))
+    expect(clipped, '首页归档标题及文章完整标题不能省略或裁切').toEqual([])
+    await expectReadable(page, HOME_ARCHIVE_RULES)
+  })
+
   test('作品中央卡与未缩放邻卡字号达标，所有作品内容完整', async ({ page }) => {
     await page.goto('/#/Portfolio')
     await expect(page.locator('#global-loading')).toHaveCount(0)

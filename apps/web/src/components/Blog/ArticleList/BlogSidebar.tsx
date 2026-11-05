@@ -43,11 +43,17 @@ export default function BlogSidebar({
     return (
       <aside className="blog-sidebar blog-sidebar--right" aria-label="站点信息">
         <section className="blog-card clock-card">
+          <div className="card-register" aria-hidden="true">
+            <span>SYSTEM TIME</span>
+            <span>03</span>
+          </div>
           <div className="clock-header">
             {profile.statusMessage ? (
               <span>{profile.statusMessage}</span>
             ) : null}
-            <span className="weather-icon" aria-hidden="true">☼</span>
+            <span className="weather-icon" aria-hidden="true">
+              <i />
+            </span>
           </div>
           <div className="clock-time">
             <span className="time-hm">
@@ -81,11 +87,16 @@ export default function BlogSidebar({
               loading="lazy"
               decoding="async"
             />
+            <span className="image-card__frame" aria-hidden="true" />
           </section>
         ) : null}
 
         {stats ? (
           <section className="blog-card stats-card">
+            <div className="card-register" aria-hidden="true">
+              <span>ARCHIVE INDEX</span>
+              <span>04</span>
+            </div>
             <h3 className="card-title">
               <span className="title-bar" /> 站点统计
             </h3>
@@ -105,6 +116,10 @@ export default function BlogSidebar({
   return (
     <aside className="blog-sidebar blog-sidebar--left" aria-label="作者信息">
       <section className="blog-card profile-card">
+        <div className="card-register" aria-hidden="true">
+          <span>PROFILE</span>
+          <span>01</span>
+        </div>
         {profile.avatarPath ? (
           <div className="profile-card__avatar">
             <img
@@ -113,6 +128,7 @@ export default function BlogSidebar({
               loading="lazy"
               decoding="async"
             />
+            <span className="profile-card__frame" aria-hidden="true" />
           </div>
         ) : null}
         <h2 className="profile-card__name">{profile.name}</h2>
@@ -164,6 +180,10 @@ export default function BlogSidebar({
 
       {profile.welcome ? (
         <section className="blog-card welcome-card">
+          <div className="card-register" aria-hidden="true">
+            <span>WELCOME</span>
+            <span>02</span>
+          </div>
           <h3 className="card-title">
             <span className="title-icon" aria-hidden="true">+</span>{' '}
             {profile.welcome.title}
@@ -171,7 +191,8 @@ export default function BlogSidebar({
           <p className="welcome-text">{profile.welcome.message}</p>
           {profile.welcome.actionLabel ? (
             <button className="welcome-btn" type="button" onClick={onFocusSearch}>
-              {profile.welcome.actionLabel}
+              <span>{profile.welcome.actionLabel}</span>
+              <span aria-hidden="true">↗</span>
             </button>
           ) : null}
         </section>
@@ -179,6 +200,10 @@ export default function BlogSidebar({
 
       {profile.quote ? (
         <section className="blog-card quote-card">
+          <div className="card-register" aria-hidden="true">
+            <span>DAILY QUOTE</span>
+            <span>05</span>
+          </div>
           <h3 className="card-title">
             <span className="title-icon" aria-hidden="true">/</span>{' '}
             {profile.quote.title}

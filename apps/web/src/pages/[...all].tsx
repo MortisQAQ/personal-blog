@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
+import { usePageReady } from '../utils/pageReady'
 import './styles/NotFound.css'
 
 function NotFoundPage() {
+  usePageReady()
+
   return (
     <main className="not-found-page" aria-labelledby="not-found-title">
       <section className="not-found-file">

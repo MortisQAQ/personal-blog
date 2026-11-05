@@ -1,128 +1,139 @@
-.live2d-toggle {
-  position: fixed;
-  left: 1rem;
-  bottom: 1.25rem;
-  z-index: 30;
-  width: 2.8rem;
-  height: 2.8rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line-color);
-  border-radius: 0.8rem;
-  color: var(--accent);
-  background: var(--surface-bg);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
-}
-
-.live2d-toggle:hover {
-  color: var(--accent-contrast);
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
+.live2d-toggle,
 .live2d-widget {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  z-index: 29;
-  pointer-events: none;
+  display: none;
 }
 
-.live2d-widget__loading {
-  position: fixed;
-  left: 1rem;
-  bottom: 1rem;
-  color: var(--text-secondary);
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  transition: opacity 180ms ease;
-}
-
-.live2d-widget:not([data-load-state='loading']) .live2d-widget__loading {
-  opacity: 0;
-}
-
-.live2d-widget[data-load-state='failed'] {
-  left: 1rem;
-  bottom: 1rem;
-  width: min(18rem, calc(100vw - 2rem));
-  pointer-events: auto;
-}
-
-.live2d-widget__error {
-  display: grid;
-  gap: 0.45rem;
-  padding: 0.9rem 3rem 0.9rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
-  border-radius: 0.8rem;
-  color: var(--text-secondary);
-  background: var(--surface-bg);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.live2d-widget__error strong {
-  color: var(--danger);
-}
-
-.live2d-widget__error span {
-  font-size: 0.78rem;
-  line-height: 1.45;
-}
-
-.live2d-widget__error button {
-  min-height: 2.2rem;
-  padding: 0 0.8rem;
-  justify-self: start;
-  border: 1px solid var(--accent);
-  border-radius: 0.55rem;
-  color: var(--accent-contrast);
-  background: var(--accent);
-  cursor: pointer;
-}
-
-.live2d-widget__close {
-  position: fixed;
-  left: 0.8rem;
-  bottom: calc(250px - 2.8rem);
-  width: 2rem;
-  height: 2rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line-color);
-  border-radius: 50%;
-  color: var(--text-secondary);
-  background: var(--surface-bg);
-  cursor: pointer;
-  pointer-events: auto;
-}
-
-.live2d-widget__close:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.live2d-widget[data-load-state='failed'] .live2d-widget__close {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
-  bottom: auto;
-  left: auto;
-}
-
-@media (width <= 768px) {
+@media (width >= 768px) {
   .live2d-toggle,
   .live2d-widget {
+    position: fixed;
+    left: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 29;
+    color: var(--text-primary);
+    background: var(--surface-bg);
+    border: 1px solid var(--line-color);
+    border-radius: 0.8rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .live2d-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    color: var(--accent);
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+
+  .live2d-widget {
+    display: grid;
+    gap: 0.4rem;
+    width: min(20rem, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    overflow: auto;
+    padding: 0.6rem;
+    overscroll-behavior: contain;
+  }
+
+  .live2d-widget__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .live2d-widget button {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--line-color);
+    border-radius: 0.5rem;
+    background: var(--surface-bg);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .live2d-widget__stage {
+    height: min(16rem, 35dvh);
+    min-height: 10rem;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .live2d-widget__stage[aria-disabled='true'] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .live2d-widget[data-load-state='failed'] .live2d-widget__stage {
     display: none;
   }
+
+  .live2d-widget__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .live2d-widget__svg .shadow { fill: var(--text-secondary); opacity: 0.15; }
+  .live2d-widget__svg .p-heart { stroke: #ff5c93; fill: #ffd0df; }
+  .live2d-widget__svg .p-dust { stroke: #9aa3c0; }
+  .live2d-widget__svg .eye { stroke: var(--accent); }
+  .live2d-widget__svg .tearf { fill: #8fd0ff; }
+
+  .live2d-widget__help,
+  .live2d-widget__status,
+  .live2d-widget__loading {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .live2d-widget__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .live2d-widget__controls button { flex: 1; }
+  .live2d-widget__controls [aria-pressed='true'] { border-color: var(--accent); color: var(--accent); }
+
+  .live2d-widget__scale {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  .live2d-widget__scale input { min-width: 0; flex: 1; accent-color: var(--accent); }
+  .live2d-widget__scale output { min-width: 3rem; text-align: right; }
+
+  .live2d-widget__error { display: grid; gap: 0.5rem; font-size: 1rem; }
+  .live2d-widget__error span { font-size: 0.875rem; }
+  .live2d-widget__source { color: var(--accent); font-size: 0.875rem; line-height: 2; }
+
+  .live2d-toggle:focus-visible,
+  .live2d-widget :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+
+@media (hover: hover) {
+  .live2d-toggle:hover,
+  .live2d-widget button:hover { border-color: var(--accent); color: var(--accent); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .live2d-toggle {
-    transition: none;
-  }
+  .live2d-toggle,
+  .live2d-widget,
+  .live2d-widget * { animation: none; transition: none; }
 }

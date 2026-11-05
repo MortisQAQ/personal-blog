@@ -143,7 +143,7 @@ Windows；一律中文回答。
 
 按"要找 X → 看 Y"组织，分四组：
 
-1. **跨模块基础设施**（`src/utils/`）：`baseUrl.resolvePublicAsset`（10 处引用）、`contentApi`（文章索引/正文，全 Blog 依赖）、`seo`、`heroVideoReady`、`apiClient`。
+1. **跨模块基础设施**（`src/utils/`）：`baseUrl.resolvePublicAsset`（10 处引用）、`contentApi`（文章索引/正文，全 Blog 依赖）、`seo`、`pageReady`（页面就绪信号）、`apiClient`。
 2. **领域逻辑**：`Blog/contentUtils.ts`、`Blog/types.ts`、`ArticleList/useArticleIndex`、`ArticleReader/useArticleReader`、`HomePanels/useHomeDescent`、`MusicToggle/useBgmAudio`、`Live2DWidget/loadLive2DWidget`。
 3. **编辑器子系统**（`MarkdownEditor/lib` + `hooks`）：`draftStore`（IndexedDB）、`fileAccess`（File System Access）、`fileTree`、`frontmatter`（与 `article-schema.mjs` 口径对齐）、`localImages`、`mathSnippets`、`vditorOptions`。
 4. **构建/质量脚本**：`scripts/content/*`、`scripts/quality/*`（含阈值常量位置）、`scripts/vendor/*`。

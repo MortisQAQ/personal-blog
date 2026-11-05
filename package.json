@@ -1,0 +1,19 @@
+{
+  "name": "personal-blog-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev:web": "pnpm --filter @loususan/web dev",
+    "build:web": "pnpm --filter @loususan/web build",
+    "lint:web": "pnpm --filter @loususan/web lint",
+    "dev:api": "pnpm --filter @lousuxing/api dev",
+    "build:api": "pnpm --filter @lousuxing/api build",
+    "lint:api": "pnpm --filter @lousuxing/api lint",
+    "test:api": "pnpm --filter @lousuxing/api test",
+    "contracts:generate": "pnpm --filter @lousuxing/contracts build",
+    "build": "pnpm run contracts:generate && pnpm run build:web && pnpm run build:api",
+    "lint": "pnpm run lint:web && pnpm run lint:api",
+    "test": "pnpm run test:api"
+  },
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
+}

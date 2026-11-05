@@ -3,6 +3,19 @@ import type { KeyboardEvent, MouseEvent, PointerEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProjectIndex, normalizeProjectIndex, PROJECTS } from '../utils/projects'
 import { getProjectStep, hasKeyModifier } from '../utils/portfolioNavigation'
+import type { UnsealMode } from '../components/ProjectUnseal'
+
+/**
+ * 开档 / 归档的分段时长，必须与 ProjectUnseal.css 的四段动画一致：
+ * arm   封面从下方推到全覆盖 → 此时才切 DOM
+ * reveal 封面继续上移离场，露出内页
+ * seal  封面自上而下压回，盖住内页 → 此时才切 DOM
+ * release 封面继续下沉离场，露出档案架
+ */
+const OPEN_ARM = 260
+const OPEN_REVEAL = 440
+const CLOSE_SEAL = 220
+const CLOSE_RELEASE = 340
 
 export default function usePortfolioController() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -12,6 +25,7 @@ export default function usePortfolioController() {
     requestedIndex,
   })
   const [phase, setPhase] = useState<'idle' | 'opening' | 'closing'>('idle')
+  const [unseal, setUnseal] = useState<UnsealMode | null>(null)
   if (selection.requestedIndex !== requestedIndex) {
     setSelection({
       localIndex: requestedIndex >= 0 ? requestedIndex : selection.localIndex,
@@ -21,7 +35,8 @@ export default function usePortfolioController() {
   const activeIndex = requestedIndex >= 0 ? requestedIndex : selection.localIndex
   const isDetailOpen = requestedIndex >= 0
   const stageRef = useRef<HTMLElement>(null)
-  const transitionTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const swapTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const phaseRef = useRef(phase)
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const suppressClick = useRef(false)
@@ -54,6 +69,17 @@ export default function usePortfolioController() {
     else rememberSelection(index)
   }, [isDetailOpen, navigate, rememberSelection])
 
+  const clearTimers = useCallback(() => {
+    if (swapTimer.current) {
+      clearTimeout(swapTimer.current)
+      swapTimer.current = null
+    }
+    if (releaseTimer.current) {
+      clearTimeout(releaseTimer.current)
+      releaseTimer.current = null
+    }
+  }, [])
+
   const transition = useCallback((index: number, detail: boolean) => {
     if (phaseRef.current !== 'idle') return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -61,11 +87,18 @@ export default function usePortfolioController() {
       return
     }
     updatePhase(detail ? 'opening' : 'closing')
-    transitionTimer.current = setTimeout(() => {
+    setUnseal(detail ? 'arm' : 'seal')
+    swapTimer.current = setTimeout(() => {
+      swapTimer.current = null
+      // 封套已完整覆盖舞台：此刻切换场景，用户看不到 DOM 替换
       navigate(index, detail)
-      updatePhase('idle')
-      transitionTimer.current = null
-    }, detail ? 420 : 240)
+      setUnseal(detail ? 'reveal' : 'release')
+      releaseTimer.current = setTimeout(() => {
+        releaseTimer.current = null
+        updatePhase('idle')
+        setUnseal(null)
+      }, detail ? OPEN_REVEAL : CLOSE_RELEASE)
+    }, detail ? OPEN_ARM : CLOSE_SEAL)
   }, [navigate, updatePhase])
 
   const openDetails = (index = activeIndex) => {
@@ -76,9 +109,7 @@ export default function usePortfolioController() {
   const closeDetails = () => transition(activeIndex, false)
   const goNext = (direction: 1 | -1) => selectProject(activeIndex + direction)
 
-  useEffect(() => () => {
-    if (transitionTimer.current) clearTimeout(transitionTimer.current)
-  }, [])
+  useEffect(() => clearTimers, [clearTimers])
 
   useEffect(() => {
     if (isDetailOpen) {
@@ -158,7 +189,7 @@ export default function usePortfolioController() {
   }
 
   return {
-    activeIndex, isDetailOpen, phase, stageRef, selectProject, openDetails, closeDetails,
+    activeIndex, isDetailOpen, phase, unseal, stageRef, selectProject, openDetails, closeDetails,
     goNext, handleCardClick, handleKeyDown, handlePointerDown, handlePointerUp,
     cancelSwipe: () => { touchStart.current = null },
   }

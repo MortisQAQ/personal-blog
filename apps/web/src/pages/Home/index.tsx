@@ -6,6 +6,7 @@ import ArticleList from '../../components/Blog/ArticleList'
 import { useHomeDescent } from './hooks/useHomeDescent'
 import { useHeroVideo } from './hooks/useHeroVideo'
 import { useScrollPrompt } from './hooks/useScrollPrompt'
+import { usePageReady } from '../../utils/pageReady'
 import {
   HERO_FALLBACK_VIDEO_SRC,
   HERO_HLS_MANIFEST_SRC,
@@ -17,6 +18,7 @@ import './styles/HomeArchive.css'
 const QUOTE_TEXT = '爱自己，是终身浪漫的开始。'
 
 function Home() {
+  usePageReady()
   const homePageRef = useRef<HTMLElement | null>(null)
   useHomeDescent(homePageRef)
   const articleSectionRef = useRef<HTMLDivElement | null>(null)

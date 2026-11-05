@@ -60,7 +60,7 @@ This is a personal blog built with React 19 + Vite 8 + TypeScript. Key architect
 ### UI Framework
 - Radix UI Themes for component library (dark theme, teal accent, slate gray)
 - Custom CSS files alongside components (e.g., `Navbar.css`, `HomePage.css`)
-- Global loading screen defined in `index.html` (removed by `AppBootstrap.tsx` once the critical font is ready)
+- Global loading screen defined in `index.html`; `AppBootstrap.tsx` removes it once the current route page signals first paint via `usePageReady`. 字体与首屏视频不再阻塞 Loading：两者已提权并行加载，页面可见后各自渐显接管。
 
 ### Asset Handling
 - Static assets in `public/` directory (favicon, images, video)
@@ -71,7 +71,7 @@ This is a personal blog built with React 19 + Vite 8 + TypeScript. Key architect
 页面按体量分级，页面私有组件 / hook / 页面级样式分别放 `components/`、`hooks/`、`styles/`（薄页面不加子目录）。
 完整槽位规范与归属判据见 [docs/agents/frontend-structure.md](../../docs/agents/frontend-structure.md)。
 
-To add a new page: create `src/pages/NewPage/index.tsx` and export a default component.
+To add a new page: create `src/pages/NewPage/index.tsx` and export a default component. 路由页面根组件必须调用 `usePageReady()`（`src/utils/pageReady.ts`），否则首屏 Loading 只能等兜底超时才撤除。
 
 ## Project Overview
 
@@ -80,7 +80,7 @@ To add a new page: create `src/pages/NewPage/index.tsx` and export a default com
 ### 主要特性
 
 - **渐进式背景加载**：首页采用图片优先、视频就绪后平滑切换的策略，支持弱网降级
-- **全局 Loading 动画**："少女吃葱中"风格，使用自定义字体 SmileySans（via JSDMirror，jsDelivr 国内镜像）
+- **全局 Loading 动画**："少女吃葱中"风格，使用自定义字体 SmileySans（via JSDMirror，jsDelivr 国内镜像）；页面首帧就绪即揭开，不等待字体与视频
 - **玻璃拟态导航栏**：基于 Radix UI Themes，半透明背景配合毛玻璃效果
 - **打字机文字动画**：响应式自动换行，支持 `prefers-reduced-motion` 降级
 - **无障碍支持**：键盘导航、屏幕阅读器友好
@@ -91,7 +91,7 @@ To add a new page: create `src/pages/NewPage/index.tsx` and export a default com
 |------|------|------|
 | Navbar | `src/components/Navbar/` | 顶部毛玻璃导航栏 |
 | EasterEggHint | `src/components/EasterEggHint/` | 彩蛋提示组件（初音绿色号冷知识） |
-| AppBootstrap | `src/AppBootstrap.tsx` | 应用启动引导，负责移除全局 Loading |
+| AppBootstrap | `src/AppBootstrap.tsx` | 应用启动引导，等待页面就绪信号后移除全局 Loading |
 
 ### 开发记录
 

@@ -4,7 +4,6 @@ import EasterEggHint from '../../../../components/EasterEggHint'
 import HeroRail from './HeroRail'
 import HeroQuote from './HeroQuote'
 import { useHeroEntrance } from './useHeroEntrance'
-import { markHeroVideoReady } from '../../../../utils/heroVideoReady'
 import './HeroPanel.css'
 
 type HeroPanelProps = {
@@ -44,19 +43,12 @@ function HeroPanel({
   )
   const shouldRenderVideo = canUseVideo && !hasVideoError
 
-  // 不走视频（减弱动效/省流/慢网）或视频彻底失败：立即广播就绪，Loading 直接揭开展示静态图
-  useEffect(() => {
-    if (!shouldRenderVideo) {
-      markHeroVideoReady()
-    }
-  }, [shouldRenderVideo])
-
   useEffect(() => {
     if (!shouldRenderVideo || videoMode !== 'hls') {
       return
     }
 
-    // Loading 屏期间是视频加载的唯一窗口，预热不再等空闲时机，挂载即拉取
+    // 页面不再等待视频：挂载即预热清单与首片，尽量缩短可见页面的视频起播时间
     const warmup = () => {
       const manifestUrl = new URL(hlsManifestSrc, window.location.href)
       const initUrl = new URL('init.mp4', manifestUrl).toString()
@@ -164,7 +156,7 @@ function HeroPanel({
       return
     }
 
-    // 与字体资源同级的高加载优先级：Loading 等待期就是视频的加载窗口
+    // 与字体资源同级的高加载优先级：Loading 不再等待视频，视频在页面可见后逐步接管背景
     const withFetchPriority = videoElement as HTMLVideoElement & {
       fetchPriority?: 'high' | 'low' | 'auto'
     }
@@ -174,9 +166,6 @@ function HeroPanel({
 
     const markVideoLoaded = () => {
       setIsVideoLoaded(true)
-      // canplay 即广播就绪：Loading 揭开不等「播放成功 + 首帧回调」，
-      // 否则自动播放被拒或 StrictMode 重挂载竞态会让信号丢失、吃满超时
-      markHeroVideoReady()
     }
 
     const handleError = () => {
@@ -210,8 +199,7 @@ function HeroPanel({
 
     // 视频可播放即拉起播放；第一帧渲染后做渐显切换
     videoElement.play().catch(() => {
-      // 自动播放被策略拒绝：画面停在当前帧/静态图，但不能拖住 Loading
-      markHeroVideoReady()
+      // 自动播放被策略拒绝：画面停在当前帧/静态图，页面显示不受影响
     })
 
     let isRevealed = false
@@ -221,7 +209,6 @@ function HeroPanel({
       }
       isRevealed = true
       setIsVideoVisible(true)
-      markHeroVideoReady()
     }
 
     const withVideoFrameCallback = videoElement as HTMLVideoElement & {

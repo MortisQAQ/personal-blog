@@ -179,6 +179,7 @@ test.describe('作品开合动效与焦点契约', () => {
       const stage = document.querySelector('.portfolio-stage')
       if (stage?.getAttribute('data-phase') !== 'opening') return null
       const card = stage.querySelector('.portfolio-card.is-active') as HTMLButtonElement
+      const unseal = stage.querySelector('.portfolio-unseal') as HTMLElement | null
       return {
         hash: location.hash,
         cardVisible: card.getClientRects().length > 0,
@@ -187,6 +188,16 @@ test.describe('作品开合动效与焦点契约', () => {
         detailCount: stage.querySelectorAll('.portfolio-details').length,
         animation: getComputedStyle(card.querySelector('.portfolio-card__cover')!).animationName,
         duration: parseFloat(getComputedStyle(card.querySelector('.portfolio-card__cover')!).animationDuration),
+        unseal: unseal
+          ? {
+              hidden: unseal.getAttribute('aria-hidden'),
+              pointerEvents: getComputedStyle(unseal).pointerEvents,
+              mode: unseal.getAttribute('data-mode'),
+              layerAnimation: getComputedStyle(unseal.querySelector('.portfolio-unseal__leaf')!).animationName,
+            }
+          : null,
+        pageFits: document.documentElement.scrollWidth <= innerWidth,
+        focusable: [...stage.querySelectorAll<HTMLElement>('.portfolio-unseal button, .portfolio-unseal a, .portfolio-unseal [tabindex]')].length,
       }
     })
     await activeCard.click()
@@ -195,6 +206,11 @@ test.describe('作品开合动效与焦点契约', () => {
     expect(openingState).toMatchObject({ hash: '#/Portfolio', cardVisible: true, expanded: 'true', disabled: true, detailCount: 0 })
     expect(openingState.animation).not.toBe('none')
     expect(openingState.duration).toBeGreaterThan(0)
+    // 封套是纯装饰层：不可聚焦、不吃指针、不撑横滚，动画必须真的在跑
+    expect(openingState.unseal).toMatchObject({ hidden: 'true', pointerEvents: 'none', mode: 'arm' })
+    expect(openingState.unseal.layerAnimation).toBe('unseal-rise')
+    expect(openingState.focusable).toBe(0)
+    expect(openingState.pageFits).toBe(true)
     await expect(page).toHaveURL(/project=triple-uni$/)
     await expect(stage).toHaveAttribute('data-phase', 'idle')
     await expect(stage).toHaveClass(/portfolio-stage--detail/)

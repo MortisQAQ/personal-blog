@@ -75,6 +75,8 @@
   position: relative;
   z-index: 2;
   margin-top: -30vh;
+  /* 固定导航栏高度 + 呼吸位：scrollIntoView 后页首 register 不被压在导航栏下 */
+  scroll-margin-top: 6.5rem;
 }
 
 /* 阅读区背板在第一段向下渐显，避免图片/网格从某条横线突然出现。 */

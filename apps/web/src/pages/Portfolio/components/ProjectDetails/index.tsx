@@ -50,7 +50,9 @@ export default function ProjectDetails({ project, activeIndex, onClose, onPrevio
         </div>
         <div className="portfolio-details__art">
           <ProjectArtwork project={project} onFallback={() => setImageFailed(true)} />
+          <span className="portfolio-details__plate" aria-hidden="true" />
         </div>
+        <p className="portfolio-details__pitch">{project.summary}</p>
       </div>
 
       <div className="portfolio-details__copy">

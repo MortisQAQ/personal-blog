@@ -77,7 +77,7 @@ public/               # 静态资源
 ## 特性
 
 - 渐进式背景加载（图片优先，视频就绪后平滑切换）
-- 全局 Loading 动画
+- 全局 Loading 动画（页面首帧就绪即揭开，不等待字体与视频）
 - 响应式设计，移动端适配
 - 无障碍支持（`prefers-reduced-motion` 降级、键盘导航）
 - GitHub Pages 部署友好（Hash 路由）

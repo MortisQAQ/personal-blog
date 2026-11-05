@@ -1,0 +1,48 @@
+# Workspace
+node_modules
+pnpm-debug.log*
+.pnpm-store
+
+# Frontend
+apps/web/node_modules
+apps/web/dist
+apps/web/dist-ssr
+# Backend
+apps/api/node_modules
+apps/api/dist
+apps/api/.env
+yugong
+.tmp
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temp
+*.local
+.trae
+.tasks
+.zip
+
+# Content（个人面试资料，不纳入版本管理）
+blog-content/面试/
+
+# 本地工具产物 / 大文件（不入库）
+/yugong.tar.gz
+/triple-uni/
+/undefined/
+/output/
+/tmp/
+/.tmp/
+/.playwright-cli/
+/.tp-*.json
+
+# 个人简历二进制（含隐私信息）
+blog-content/**/*.docx
+blog-content/~$*

@@ -14,38 +14,102 @@
   outline: none;
   scroll-margin-top: 8rem;
 }
+
 .portfolio-stage:focus-visible { outline: 2px solid var(--portfolio-blue); outline-offset: 0.4rem; }
+
 .portfolio-stage__backdrop { position: absolute; inset: -1.5rem -1rem 0; z-index: -2; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse at 72% 44%, #3b583526, transparent 58%); }
 .portfolio-stage__watermark { position: absolute; left: 0; bottom: 3rem; color: #ddedda08; font: 600 clamp(4rem, 13vw, 12rem)/0.9 'Oswald', var(--sans); letter-spacing: -0.045em; white-space: nowrap; }
 .portfolio-stage__grain { position: absolute; inset: 0; background: radial-gradient(circle, #b4ee830d 1px, transparent 1.5px) 0 0 / 6px 6px; mask-image: linear-gradient(90deg, #000, transparent 60%); }
 .portfolio-stage--detail { display: block; }
-.portfolio-stage[data-phase='opening'] .portfolio-card.is-active .portfolio-card__cover { animation: portfolio-file-unseal 420ms var(--ease-out) both; }
-.portfolio-stage[data-phase='opening'] .portfolio-directory { animation: portfolio-directory-out 420ms ease both; pointer-events: none; }
-.portfolio-stage[data-phase='closing'] .portfolio-details { animation: portfolio-scene-out 240ms ease both; pointer-events: none; }
-.portfolio-stage:not([data-phase='closing']) .portfolio-details { animation: portfolio-scene-in 460ms var(--ease-out) both; }
+
+/* ---------- 开档：档案架退场 ---------- */
+
+/* 目录逐行向左抽走，中央卡组下沉让位，封面被「抽出」后由封套接管 */
+.portfolio-stage[data-phase='opening'] .portfolio-directory { pointer-events: none; }
+
+.portfolio-stage[data-phase='opening'] :is(
+  .portfolio-directory__heading,
+  .portfolio-directory__item,
+  .portfolio-directory__hint
+) {
+  animation: portfolio-row-out 300ms cubic-bezier(0.33, 0, 0.2, 1) both;
+}
+
+.portfolio-stage[data-phase='opening'] .portfolio-directory li:nth-child(2) :is(.portfolio-directory__item) { animation-delay: 26ms; }
+.portfolio-stage[data-phase='opening'] .portfolio-directory li:nth-child(3) :is(.portfolio-directory__item) { animation-delay: 52ms; }
+.portfolio-stage[data-phase='opening'] .portfolio-directory li:nth-child(4) :is(.portfolio-directory__item) { animation-delay: 78ms; }
+.portfolio-stage[data-phase='opening'] .portfolio-directory__hint { animation-delay: 110ms; }
+
+.portfolio-stage[data-phase='opening'] .portfolio-carousel {
+  animation: portfolio-deck-out 320ms cubic-bezier(0.4, 0, 0.2, 1) 30ms both;
+  pointer-events: none;
+}
+
+.portfolio-stage[data-phase='opening'] .portfolio-card.is-active .portfolio-card__cover {
+  animation: portfolio-file-unseal 300ms cubic-bezier(0.33, 0, 0.2, 1) both;
+}
+
+/* ---------- 内页入场：分层落位 ---------- */
+
+.portfolio-stage:not([data-phase='closing']) .portfolio-details {
+  animation: portfolio-scene-veil 340ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > * {
+  animation: portfolio-block-in 520ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(1) { animation-delay: 40ms; }
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(2) { animation-delay: 90ms; }
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(3) { animation-delay: 150ms; }
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(4) { animation-delay: 220ms; }
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(5) { animation-delay: 280ms; }
+.portfolio-stage:not([data-phase='closing']) .portfolio-details > :nth-child(6) { animation-delay: 330ms; }
+
+/* ---------- 归档：内页退场 ---------- */
+
+.portfolio-stage[data-phase='closing'] .portfolio-details {
+  animation: portfolio-scene-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+
+@keyframes portfolio-row-out {
+  to { opacity: 0; transform: translateX(-1.4rem); }
+}
+
+@keyframes portfolio-deck-out {
+  to { opacity: 0; transform: translateY(1.75rem) scale(0.985); }
+}
+
+@keyframes portfolio-file-unseal {
+  0% { transform: translateY(0); }
+  55% { transform: translateY(-0.45rem); }
+  100% { transform: translateY(-0.8rem); }
+}
+
+@keyframes portfolio-scene-veil {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes portfolio-block-in {
+  from { opacity: 0.001; transform: translateY(1.4rem); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes portfolio-scene-out {
+  to { opacity: 0; transform: translateY(0.9rem) scale(0.99); }
+}
 
 @media (width >= 768px) {
   .portfolio-stage { gap: 3rem; }
 }
+
 @media (width >= 1024px) {
   .portfolio-stage { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: center; gap: clamp(2rem, 3vw, 3rem); }
   .portfolio-stage__backdrop { inset: -1.5rem -2rem 0; }
 }
-@keyframes portfolio-file-unseal {
-  0% { transform: translateX(0); }
-  65% { transform: translateX(-0.75rem); }
-  100% { transform: translateX(-1rem) translateY(-0.5rem); }
-}
-@keyframes portfolio-directory-out {
-  to { opacity: 0; transform: translateX(-0.6rem); }
-}
-@keyframes portfolio-scene-in {
-  from { opacity: 0; transform: translateY(1rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes portfolio-scene-out {
-  to { opacity: 0; transform: translateY(0.75rem); }
-}
+
 @media (prefers-reduced-motion: reduce) {
   .portfolio-stage *, .portfolio-stage *::before, .portfolio-stage *::after { animation: none !important; transition: none !important; }
 }

@@ -1,6 +1,7 @@
 import ProjectDeck from '../ProjectDeck'
 import ProjectDirectory from '../ProjectDirectory'
 import ProjectDetails from '../ProjectDetails'
+import ProjectUnseal from '../ProjectUnseal'
 import type { PortfolioController } from '../../hooks/usePortfolioController'
 import { PROJECTS } from '../../utils/projects'
 import './PortfolioStage.css'
@@ -11,7 +12,7 @@ type PortfolioStageProps = {
 
 export default function PortfolioStage({ controller }: PortfolioStageProps) {
   const {
-    activeIndex, isDetailOpen, phase, stageRef, selectProject, openDetails, closeDetails,
+    activeIndex, isDetailOpen, phase, unseal, stageRef, selectProject, openDetails, closeDetails,
     goNext, handleCardClick, handleKeyDown, handlePointerDown, handlePointerUp, cancelSwipe,
   } = controller
   const project = PROJECTS[activeIndex]
@@ -47,6 +48,7 @@ export default function PortfolioStage({ controller }: PortfolioStageProps) {
           <ProjectDeck activeIndex={activeIndex} opening={phase === 'opening'} onStep={goNext} onCardClick={handleCardClick} />
         </>
       )}
+      {unseal ? <ProjectUnseal mode={unseal} project={project} index={activeIndex} /> : null}
     </section>
   )
 }

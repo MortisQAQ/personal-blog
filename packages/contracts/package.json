@@ -1,0 +1,13 @@
+{
+  "name": "@lousuxing/contracts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm run generate:web-client",
+    "generate:web-client": "node ./scripts/generate-web-client.mjs"
+  },
+  "exports": {
+    "./generated/web-client": "./generated/web-client.ts"
+  }
+}

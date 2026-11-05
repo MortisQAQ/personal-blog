@@ -41,52 +41,37 @@ test.describe('首页打字机', () => {
     expect(state).toEqual({ animation: 'none', transform: 'none' })
   })
 
-  test('Loading 移除后逐字输出，完成前后布局稳定', async ({ page }) => {
+  test('Loading 揭开后逐字输出，完成前后布局稳定', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' })
-    let releaseMedia!: () => void
-    const mediaGate = new Promise<void>((resolve) => { releaseMedia = resolve })
-    await page.route(/\/home\/(hls\/|home-vp9\.webm)/, async (route) => {
-      await mediaGate
-      await route.abort()
+    await page.route(/\/home\/(hls\/|home-vp9\.webm)/, (route) => route.abort())
+    await page.goto('/#/Home', { waitUntil: 'domcontentloaded' })
+
+    const hero = page.locator('.home-panel')
+    const quote = page.locator('.home-quote')
+    const output = page.locator('.home-quote-text')
+    await expect(page.locator('#global-loading')).toHaveCount(0)
+    await expect(hero).toHaveAttribute('data-entrance-ready', 'true')
+    await expect(output).toHaveText('')
+    await expect(quote).toHaveAttribute('aria-label', QUOTE)
+    const initialBox = await quote.boundingBox()
+    expect(initialBox).not.toBeNull()
+
+    await expect.poll(async () => (await output.textContent())?.length ?? 0).toBeGreaterThan(0)
+    const partial = await output.textContent()
+    expect(QUOTE.startsWith(partial ?? '')).toBe(true)
+    expect(partial!.length).toBeLessThan(QUOTE.length)
+    await expect(output).toHaveText(QUOTE)
+    await expect(quote).toHaveAttribute('data-complete', 'true')
+    const finalBox = await quote.boundingBox()
+    expect(finalBox).not.toBeNull()
+    expect(Math.abs(finalBox!.height - initialBox!.height)).toBeLessThan(1)
+    expect(Math.abs(finalBox!.y - initialBox!.y)).toBeLessThan(1)
+    expect(finalBox!.x + finalBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+    const caret = await output.evaluate((element) => {
+      const style = getComputedStyle(element, '::after')
+      return { animation: style.animationName, opacity: style.opacity }
     })
-
-    try {
-      await page.goto('/#/Home', { waitUntil: 'domcontentloaded' })
-      const hero = page.locator('.home-panel')
-      const quote = page.locator('.home-quote')
-      const output = page.locator('.home-quote-text')
-      await expect(hero).toHaveAttribute('data-entrance-ready', 'false')
-      await expect(output).toHaveText('')
-      await expect(page.locator('.home-info-header')).toHaveCSS('animation-play-state', 'paused')
-      await expect(quote).toHaveAttribute('aria-label', QUOTE)
-
-      releaseMedia()
-      await expect(page.locator('#global-loading')).toHaveCount(0)
-      await expect(hero).toHaveAttribute('data-entrance-ready', 'true')
-      await expect(output).toHaveText('')
-      await expect(page.locator('.home-info-header')).toHaveCSS('opacity', '1')
-      const initialBox = await quote.boundingBox()
-      expect(initialBox).not.toBeNull()
-
-      await expect.poll(async () => (await output.textContent())?.length ?? 0).toBeGreaterThan(0)
-      const partial = await output.textContent()
-      expect(QUOTE.startsWith(partial ?? '')).toBe(true)
-      expect(partial!.length).toBeLessThan(QUOTE.length)
-      await expect(output).toHaveText(QUOTE)
-      await expect(quote).toHaveAttribute('data-complete', 'true')
-      const finalBox = await quote.boundingBox()
-      expect(finalBox).not.toBeNull()
-      expect(Math.abs(finalBox!.height - initialBox!.height)).toBeLessThan(1)
-      expect(Math.abs(finalBox!.y - initialBox!.y)).toBeLessThan(1)
-      expect(finalBox!.x + finalBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width)
-      const caret = await output.evaluate((element) => {
-        const style = getComputedStyle(element, '::after')
-        return { animation: style.animationName, opacity: style.opacity }
-      })
-      expect(caret).toEqual({ animation: 'none', opacity: '0' })
-    } finally {
-      releaseMedia()
-    }
+    expect(caret).toEqual({ animation: 'none', opacity: '0' })
   })
 
   test('减弱动效直接显示全文，且没有光标闪烁或视频', async ({ page }) => {

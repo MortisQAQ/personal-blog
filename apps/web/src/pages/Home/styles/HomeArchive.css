@@ -1,8 +1,28 @@
+/* 首页二屏「笔记档案」页首
+   —— 页面级样式：只负责标题区构图与本页作用域内的 token 收口。
+   卡片自身视觉在 components/Blog/ArticleList/ArticleListCards.css。 */
+
 .home-archive-heading {
+  --archive-accent: var(--home-accent);
   position: relative;
   width: min(92rem, calc(100% - 2.5rem));
   margin-inline: auto;
-  padding: 5.5rem 0 1.75rem;
+  padding: 5.5rem 0 2.25rem;
+}
+
+.home-archive-heading::before {
+  content: '';
+  position: absolute;
+  top: 3.5rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--archive-accent) 55%, transparent),
+    color-mix(in srgb, var(--home-line) 45%, transparent) 18%,
+    transparent 70%
+  );
 }
 
 .home-archive-heading__code,
@@ -16,70 +36,103 @@
   letter-spacing: 0.12em;
 }
 
+.home-archive-heading__code {
+  position: relative;
+  padding-top: 1.35rem;
+}
+
 .home-archive-heading__code > span {
-  padding: 0.35rem 0.55rem;
-  color: var(--home-ground);
-  background: var(--home-accent);
+  padding: 0.3rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--archive-accent) 65%, transparent);
+  color: var(--archive-accent);
+  background: color-mix(in srgb, var(--archive-accent) 8%, transparent);
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .home-archive-heading__row {
   display: grid;
   gap: 1.1rem;
-  padding: 1.8rem 0;
+  padding: 2.4rem 0 2.1rem;
 }
 
 .home-archive-heading__title {
+  position: relative;
   margin: 0;
+  padding-block: 0.2em;
   font-family: 'Oswald', 'SmileySans', sans-serif;
-  font-size: clamp(3rem, 12vw, 8rem);
+  font-size: clamp(3rem, 12vw, 7.5rem);
   font-weight: 700;
-  line-height: 0.94;
-  letter-spacing: -0.045em;
+  line-height: 1.12;
+  letter-spacing: 0;
   color: #ecefe7;
 }
 
 .home-archive-heading__title > span { color: #899182; }
-.home-archive-heading__title > .home-archive-heading__period { color: var(--home-accent); }
+
+.home-archive-heading__title > .home-archive-heading__period {
+  color: var(--archive-accent);
+  text-shadow: 0 0 1.4rem color-mix(in srgb, var(--archive-accent) 55%, transparent);
+}
 
 .home-archive-heading__caption {
+  position: relative;
   margin: 0;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  max-width: 25rem;
+  padding-left: 0.9rem;
+  border-left: 1px solid color-mix(in srgb, var(--archive-accent) 45%, transparent);
+  font-size: 1rem;
+  line-height: 1.75;
   color: #e8eee2;
 }
 
-.home-archive-heading__caption > span { font-size: 1rem; color: #b4c0ac; }
-.home-archive-heading__rule { justify-content: space-between; border-top: 1px solid var(--home-line); padding-top: 0.75rem; }
-.home-archive-heading__rule > span:last-child { color: var(--home-accent); font-size: 1.2rem; }
+.home-archive-heading__caption > span { color: #b4c0ac; }
 
-.home-page .blog-reader {
-  --reader-surface: rgba(22, 27, 22, 0.94);
-  --reader-border: var(--home-line);
-  --reader-border-soft: rgba(206, 221, 195, 0.12);
-  --reader-radius: 2px;
-  --reader-shadow: none;
-  --reader-text-muted: #97a393;
+.home-archive-heading__rule {
+  justify-content: space-between;
+  border-top: 1px solid color-mix(in srgb, var(--home-line) 70%, transparent);
+  padding-top: 0.85rem;
 }
 
-.home-page .blog-dashboard { padding-top: 1rem; }
-.home-page .blog-main__toolbar h2 { font-weight: 400; }
-.home-page .blog-categories { border-inline: 0; border-radius: 0; padding-inline: 0; background: transparent; }
-.home-page .category-btn { min-height: 2.75rem; border-radius: 1px; }
-.home-page .featured-article { border-top-color: rgba(206, 221, 195, 0.25); }
-.home-page .featured-article__title { font-size: 1.32rem; font-weight: 400; }
-.home-page .tag-pill { border-radius: 1px; }
-.home-page .blog-card { box-shadow: none; }
-.home-page .profile-card__avatar { width: min(100%, 7rem); margin-inline: auto; }
+.home-archive-heading__rule > span:last-child {
+  color: var(--archive-accent);
+  font-size: 1.2rem;
+  animation: archive-arrow-cue 2.6s ease-in-out infinite;
+}
+
+@keyframes archive-arrow-cue {
+  0%, 62%, 100% { transform: translateY(0); opacity: 0.75; }
+  78% { transform: translateY(0.3rem); opacity: 1; }
+}
+
+/* 阅读区 token 收口：卡片 / 侧栏 / 搜索统一取墨绿黑链路 */
+.home-page .blog-reader {
+  --reader-surface: rgba(19, 27, 21, 0.58);
+  --reader-control: rgba(206, 221, 195, 0.055);
+  --reader-border: rgba(206, 221, 195, 0.25);
+  --reader-border-soft: rgba(206, 221, 195, 0.13);
+  --reader-radius: 0;
+  --reader-shadow: none;
+  --reader-text-muted: #a8b4a3;
+}
+
+.home-page .blog-dashboard { padding-top: 0.5rem; row-gap: 2.5rem; }
 
 @media (width >= 768px) {
   .home-archive-heading { width: min(92rem, calc(100% - 3rem)); padding-top: 4rem; }
+  .home-archive-heading::before { top: 3rem; }
   .home-archive-heading__row { grid-template-columns: 1fr auto; align-items: end; gap: 2rem; }
-  .home-archive-heading__title { font-size: clamp(4rem, 10vw, 8rem); }
+  .home-archive-heading__title { font-size: clamp(4rem, 10vw, 7.5rem); }
   .home-archive-heading__caption { padding-bottom: 0.5rem; }
 }
 
 @media (width >= 1024px) {
   .home-archive-heading { padding-top: 3.5rem; }
+  .home-archive-heading::before { top: 2.6rem; }
   .home-archive-heading__row { padding: 2rem 0 2.5rem; }
   .home-archive-heading__caption { padding-right: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-archive-heading__rule > span:last-child { animation: none; }
 }

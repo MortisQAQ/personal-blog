@@ -22,13 +22,16 @@ export default function ArticleCatalog({
   return (
     <main className="blog-main">
       <div className="blog-main__toolbar">
-        <div>
-          <span className="blog-main__eyebrow">KNOWLEDGE BASE</span>
+        <div className="blog-main__title">
+          <span className="blog-main__eyebrow">
+            <span className="blog-main__eyebrow-mark" aria-hidden="true" />
+            KNOWLEDGE BASE
+          </span>
           <h2>文章与思考</h2>
         </div>
         <label className="blog-search">
           <span className="sr-only">搜索文章</span>
-          <span aria-hidden="true">⌕</span>
+          <span className="blog-search__glyph" aria-hidden="true">⌕</span>
           <input
             ref={searchInputRef}
             value={searchQuery}
@@ -112,10 +115,11 @@ export default function ArticleCatalog({
         </div>
       ) : visibleArticles.length > 0 ? (
         <div className="blog-article-grid">
-          {visibleArticles.map((article) => (
+          {visibleArticles.map((article, index) => (
             <ArticleCard
               key={article.slug}
               article={article}
+              index={index}
               onOpen={onOpenArticle}
               onPrefetch={onPrefetchArticle}
             />

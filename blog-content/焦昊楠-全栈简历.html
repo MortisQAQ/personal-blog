@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>焦昊楠 - 全栈开发工程师</title>
+<style>
+  :root{ --blue:#2458B8; --ink:#1a1a1a; --muted:#555; --bar:#F3F4F6; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#e9ecef; }
+  body{ font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Source Han Sans SC",SimHei,sans-serif;
+        color:var(--ink); font-size:9.5pt; line-height:1.38; -webkit-font-smoothing:antialiased; }
+  .toolbar{ position:fixed; top:0; left:0; right:0; height:38px; z-index:99; background:#22303f; color:#fff;
+            display:flex; align-items:center; gap:8px; padding:0 12px; font-size:12px; }
+  .toolbar button{ font:inherit; padding:4px 10px; border-radius:5px; border:1px solid #4a5b70; background:#2f4257; color:#fff; cursor:pointer; }
+  .toolbar button:hover{ background:#3d5470; }
+  .toolbar .hint{ opacity:.65; margin-left:auto; }
+  .sheet{ width:210mm; min-height:297mm; margin:56px auto 24px; background:#fff; padding:12mm 13mm;
+          box-shadow:0 2px 14px rgba(0,0,0,.16); }
+  .sheet.long{ min-height:auto; }
+
+  /* header */
+  .name{ font-size:21pt; font-weight:700; letter-spacing:.5px; line-height:1.1; }
+  .role{ font-size:10.5pt; color:var(--blue); font-weight:700; margin-top:2px; }
+  .contact{ font-size:8.8pt; color:var(--muted); margin-top:4px; }
+  .contact a{ color:var(--muted); text-decoration:none; }
+  .tagline{ font-size:9pt; color:#333; margin-top:5px; padding-top:5px; border-top:1px solid #dfe3e8; }
+
+  /* section */
+  h2{ font-size:12.5pt; color:var(--blue); font-weight:700; margin:10px 0 5px; padding-bottom:2px; border-bottom:1.5px solid var(--blue); letter-spacing:.5px; }
+  h2:first-of-type{ margin-top:8px; }
+
+  /* experience bar */
+  .bar{ background:var(--bar); border-radius:6px; padding:3px 8px; display:flex; justify-content:space-between;
+        align-items:baseline; margin-top:6px; font-size:9.6pt; }
+  .bar .l{ font-weight:700; }
+  .bar .l span{ font-weight:400; color:var(--muted); }
+  .bar .r{ color:var(--muted); font-size:8.8pt; white-space:nowrap; }
+
+  /* project title */
+  .proj{ margin-top:7px; display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .proj .t{ font-size:10.5pt; font-weight:700; color:var(--blue); }
+  .proj .t em{ font-style:normal; font-weight:400; color:#444; font-size:9pt; }
+  .proj .r{ color:var(--muted); font-size:8.8pt; white-space:nowrap; }
+  .stack{ font-size:8.6pt; color:var(--muted); margin:1px 0 2px; }
+
+  ul{ margin:2px 0 0; padding-left:15px; }
+  li{ margin:1.5px 0; }
+  li b{ color:#111; }
+  .k{ font-weight:700; }
+  .edu{ display:flex; justify-content:space-between; align-items:baseline; margin-top:4px; }
+  .edu .l{ font-weight:700; }
+  .edu .l span{ font-weight:400; color:var(--muted); }
+  .edu .r{ color:var(--muted); font-size:8.8pt; }
+  .honor{ font-size:8.8pt; color:#333; margin-top:2px; }
+  .skill-row{ margin:2px 0; }
+  .skill-row .lb{ display:inline-block; min-width:86px; font-weight:700; }
+  a{ color:var(--blue); text-decoration:none; }
+
+  @media print{
+    html,body{ background:#fff; }
+    .toolbar{ display:none !important; }
+    .sheet{ margin:0; box-shadow:none; width:auto; min-height:auto; padding:0; }
+    @page{ size:A4; margin:12mm 13mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="btnEdit">✎ 编辑</button>
+  <button id="btnPrint">🖨 打印 / 导出 PDF</button>
+  <button id="btnSave">⭳ 保存 HTML</button>
+  <button id="btnMode">A4 长页</button>
+  <span class="hint">选中文字后可用浏览器自带功能改样式；内容自动保存在本地浏览器</span>
+</div>
+
+<div class="sheet" id="sheet" contenteditable="false">
+
+  <div class="name">焦昊楠</div>
+  <div class="role">全栈开发工程师</div>
+  <div class="contact">
+    13337526713（内地）· 53393892（香港）· <a href="mailto:1981805808@qq.com">1981805808@qq.com</a> · <a href="https://github.com/yukariyukaro">github.com/yukariyukaro</a> · 个人博客 / 作品集
+  </div>
+  <div class="tagline">香港中文大学 27 届计算机科学本科 · 两段字节跳动实习 · 能独立走完「接口设计 → 服务端实现 → 端上交付 → 上线观测」全链路</div>
+
+  <h2>技能</h2>
+  <div class="skill-row"><span class="lb">语言 / 运行时</span>TypeScript、JavaScript、Node.js（Express）、SQL、Python</div>
+  <div class="skill-row"><span class="lb">前端</span>React 19、Next.js、Zustand / Redux、Vite；微信小程序原生、Lynx（类 RN）</div>
+  <div class="skill-row"><span class="lb">后端</span>REST / RPC 接口设计、JWT 鉴权与权限模型、MySQL 表设计与索引、Redis 缓存与幂等、SSR</div>
+  <div class="skill-row"><span class="lb">工程 / AI</span>pnpm Monorepo、Playwright 单测与 E2E、CI 与埋点监控；RAG 知识库、Agent 工具调用、流式输出</div>
+
+  <h2>实习经历</h2>
+
+  <div class="bar"><div class="l">字节跳动 · 财经（消费金融）<span>｜全栈开发</span></div><div class="r">2026.04 – 至今</div></div>
+  <ul>
+    <li><b>AI 理财助手</b>：Express 定义流式对话接口（首包 / 增量 / 结束 / 错误帧与卡片指令），前端实现增量 Markdown 解析与打字机渲染，长回答可中断、可重试。</li>
+    <li><b>AI 服务建设</b>：搭建知识库（入库 → 切分 → 召回）与客服、理财两个 Agent 的服务端接口，收敛为配置化能力，新场景接入不改端上代码。</li>
+    <li><b>「学知识买 ETF」活动（技术主 O）</b>：服务端下发活动模板与推荐数据，前端用 Zustand 状态机统一登录态、异常与埋点；日曝光 10w+，日促近百人首购。</li>
+  </ul>
+
+  <div class="bar"><div class="l">字节跳动 · 火山引擎（数据平台）<span>｜全栈开发</span></div><div class="r">2025.08 – 2025.12</div></div>
+  <ul>
+    <li><b>ByteHouse 愚公迁移工具（独立负责）</b>：抽象统一请求层，兼容 REST 与 RPC 两套网关（自动解包 + 错误码归一），业务代码不感知网关差异。</li>
+    <li><b>迁移工作流</b>：以状态机重构「创建迁移任务」流程，支持自定义节点与多种迁移方案扩展，删减千行重复代码。</li>
+    <li><b>表单引擎与首屏</b>：Formily 动态 schema 承接服务端下发的表单定义，新增数据源改为配置交付；路由级懒加载拆包，首屏加载提升 30%。</li>
+  </ul>
+
+  <h2>项目经历</h2>
+
+  <div class="proj"><div class="t">Triple Uni <em>｜港三校留学生社交平台 · 万级注册 / 千级日活</em></div><div class="r">2023.06 – 至今</div></div>
+  <div class="stack">微信小程序原生 · Node.js / Express · MySQL · Redis · Next.js　（全栈）</div>
+  <ul>
+    <li><b>帖子信息流</b>：服务端 Express 提供分页列表接口（30 条 / 页、尾页标记，公开 / 私密 / 本校 / 跨校可见性在 SQL 层过滤）；小程序端虚拟列表增量渲染并预取下一屏，首屏请求量不随数据量增长。</li>
+    <li><b>热门榜</b>：服务端每小时按浏览、评论、关注、媒体类型加权打分，叠加半衰期一天的衰减，Top 50 落表供接口直读；小程序端直接渲染，榜单刷新不产生实时算分开销。</li>
+    <li><b>登录与会话</b>：服务端 JWT + 统一业务码鉴权；小程序请求层捕获失效后自动重登并重放原请求，并用 single-flight 收敛并发，过期只刷新一次，首屏 4 次重登降为 1 次。</li>
+    <li><b>年度总结</b>：服务端聚合用户年度行为、按页返回 <code>pages{pageN}</code>；Next.js 端 20+ 屏故事页按页取数渲染并静态导出部署，上线 5000+ PV，空窗期用户活跃度 +50%。</li>
+  </ul>
+
+  <div class="proj"><div class="t">A 股今日异动 <em>｜AI 内容生产与多入口触达 · 日均 1000+ UV</em></div><div class="r">2026.06 – 2026.08</div></div>
+  <div class="stack">Express · React / Lynx · PIA SSR · 飞书开放平台　（全栈）</div>
+  <ul>
+    <li><b>内容链路</b>：Express 承接异动事件，调用 AI 生产标题与摘要，聚合后下发小程序卡片、资讯页与站内信三类入口。</li>
+    <li><b>三态数据契约</b>：接口区分「待计算 / 已就绪 / 不展示」，耗时的指数快照改为非阻塞补齐，消除「有骨架无内容」的空壳页。</li>
+    <li><b>审批与物料</b>：Agent + 审批平台 API + 飞书机器人完成审批推送与回写；gpt-image-2 子任务按异动消息自动生成营销 banner。</li>
+    <li><b>承接页性能</b>：SSR 直出 + 按需懒加载，秒开率（LCP ≤ 1s）10% → 75%，A/B 点击转化 +10%。</li>
+  </ul>
+
+  <h2>教育背景</h2>
+  <div class="edu"><div class="l">香港中文大学<span>｜计算机科学与技术 · 本科</span></div><div class="r">2023.09 – 2027.06</div></div>
+  <div class="honor">本科入学奖学金 · 荣誉新生奖 · 雅思 6.5</div>
+
+</div>
+
+<script>
+(function(){
+  var sheet = document.getElementById('sheet');
+  var KEY = 'resume-jiaohaonan-fullstack-v1';
+  try { var saved = localStorage.getItem(KEY); if (saved) sheet.innerHTML = saved; } catch(e){}
+
+  document.getElementById('btnEdit').addEventListener('click', function(){
+    var on = sheet.getAttribute('contenteditable') === 'true';
+    sheet.setAttribute('contenteditable', on ? 'false' : 'true');
+    sheet.style.outline = on ? 'none' : '1px dashed #9bb8e6';
+    this.textContent = on ? '✎ 编辑' : '✓ 完成编辑';
+  });
+
+  document.getElementById('btnMode').addEventListener('click', function(){
+    sheet.classList.toggle('long');
+    this.textContent = sheet.classList.contains('long') ? 'A4 分页' : 'A4 长页';
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', function(){ window.print(); });
+
+  document.getElementById('btnSave').addEventListener('click', function(){
+    try { localStorage.setItem(KEY, sheet.innerHTML); } catch(e){}
+    var clone = document.documentElement.cloneNode(true);
+    var bar = clone.querySelector('.toolbar'); if (bar) bar.remove();
+    var s = clone.querySelector('#sheet'); if (s) { s.setAttribute('contenteditable','false'); s.style.outline='none'; }
+    var blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], {type:'text/html;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '焦昊楠-全栈开发工程师.html';
+    a.click();
+  });
+
+  sheet.addEventListener('input', function(){
+    try { localStorage.setItem(KEY, sheet.innerHTML); } catch(e){}
+  });
+})();
+</script>
+</body>
+</html>

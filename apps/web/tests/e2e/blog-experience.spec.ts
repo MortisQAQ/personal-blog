@@ -244,23 +244,18 @@ test.describe('博客核心体验', () => {
     ).toHaveCount(0)
   })
 
-  test('非移动端 Live2D 默认按需开启', async ({ page }) => {
+  test('非移动端鲸鱼组件默认按需开启并完成真实加载', async ({ page }, testInfo) => {
     test.setTimeout(30_000)
-    test.skip(test.info().project.name === 'mobile-chromium', '移动端不提供 Live2D')
+    test.skip(testInfo.project.name === 'mobile-chromium', '手机端不提供鲸鱼组件')
 
     await expect(
-      page.locator('iframe[title="Live2D 看板娘"]'),
+      page.getByRole('button', { name: '开启鲸鱼娘' }),
     ).toHaveCount(0)
-    await page.getByRole('button', { name: '开启 Live2D 看板娘' }).click()
+    await page.getByRole('button', { name: '关闭鲸鱼娘' }).click()
     await expect(
-      page.getByRole('button', { name: '关闭 Live2D 看板娘' }),
-    ).toBeVisible()
-    await expect(
-      page.locator('iframe[title="Live2D 看板娘"]'),
-    ).toHaveCount(0)
-    const canvas = page.locator('body > div > canvas')
-    await expect(canvas).toHaveCount(1)
-    await expect(canvas).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
+      page.getByRole('region', { name: '鲸鱼娘' }),
+    ).toHaveAttribute('data-load-state', 'loaded')
+    await expect(page.locator('.live2d-widget__svg')).toBeVisible()
   })
 
   test('支持标签筛选，并在文章页展示相关文章推荐', async ({ page }) => {

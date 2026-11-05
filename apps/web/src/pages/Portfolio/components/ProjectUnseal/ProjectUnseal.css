@@ -1,0 +1,354 @@
+/* 档案封套：作品卡片 → 详情页之间的过场层
+   时序与 usePortfolioController 的 OPEN_ARM / OPEN_REVEAL / CLOSE_SEAL /
+   CLOSE_RELEASE 常量一一对应；CSS 侧刻意比 JS 早 20ms 收尾，
+   保证切换 DOM 的那一帧封套已经完整覆盖，不会露出边缝。 */
+
+.portfolio-unseal {
+  --unseal-ink: #050a07;
+  --unseal-paper: #f2f5ee;
+  --unseal-green: var(--portfolio-green, #b4ee83);
+  --unseal-line: rgba(214, 236, 205, 0.22);
+  position: absolute;
+  inset: -1.5rem -1rem -0.5rem;
+  z-index: 6;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.portfolio-unseal__leaf {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 88% 10%, rgba(180, 238, 131, 0.14), transparent 56%),
+    linear-gradient(168deg, #0a130e 0%, var(--unseal-ink) 48%, #030805 100%);
+  will-change: transform;
+}
+
+/* 细网格 + 斜切亮带：封套在高速位移时仍然读得出「同一张档案」 */
+.portfolio-unseal__mesh {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(214, 236, 205, 0.055) 0 1px, transparent 1px 3.5rem),
+    repeating-linear-gradient(90deg, rgba(214, 236, 205, 0.055) 0 1px, transparent 1px 3.5rem);
+  mask-image: linear-gradient(120deg, #000 0 52%, transparent 80%);
+  -webkit-mask-image: linear-gradient(120deg, #000 0 52%, transparent 80%);
+}
+
+.portfolio-unseal__swoosh {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 62%;
+  height: 150%;
+  background: linear-gradient(
+    104deg,
+    transparent 0 44%,
+    rgba(180, 238, 131, 0.1) 44% 46%,
+    transparent 46% 100%
+  );
+  transform: skewX(-4deg);
+}
+
+/* 作品视觉作为封套右半边的暗纹，承接到内页的大图 */
+.portfolio-unseal__art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 34rem);
+  overflow: hidden;
+  clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0.5;
+  mask-image: linear-gradient(100deg, transparent 0, #000 38%, #000 100%);
+  -webkit-mask-image: linear-gradient(100deg, transparent 0, #000 38%, #000 100%);
+}
+
+.portfolio-unseal__art .project-artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 72% center;
+}
+
+.portfolio-unseal__art .project-artwork--graphic {
+  background: transparent;
+  color: var(--unseal-green);
+}
+
+.portfolio-unseal__art .project-artwork--graphic svg {
+  height: 100%;
+  transform: scale(1.35) translateX(4%);
+  opacity: 0.65;
+}
+
+.portfolio-unseal__art .project-artwork__code {
+  display: none;
+}
+
+.portfolio-unseal__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 4vw, 2.6rem);
+  color: var(--unseal-paper);
+  will-change: transform;
+}
+
+.portfolio-unseal__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 0;
+}
+
+.portfolio-unseal__base {
+  display: grid;
+  gap: 0;
+}
+
+.portfolio-unseal__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #b9c6b4;
+  font-family: var(--mono);
+  font-size: var(--font-micro);
+  letter-spacing: 0.14em;
+}
+
+.portfolio-unseal__mark {
+  color: var(--unseal-paper);
+  font-family: 'Oswald', var(--sans);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.06em;
+}
+
+.portfolio-unseal__mark > i {
+  color: var(--unseal-green);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.portfolio-unseal__code {
+  text-align: right;
+}
+
+.portfolio-unseal__title {
+  margin: 0;
+  color: var(--unseal-paper);
+  font-family: 'Oswald', var(--sans);
+  font-size: clamp(2.6rem, 8.5vw, 6rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+  text-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.55);
+}
+
+.portfolio-unseal__name {
+  color: var(--unseal-green);
+  font-family: var(--sans);
+  font-size: clamp(1.0625rem, 2vw, 1.375rem);
+  font-style: normal;
+  line-height: 1.4;
+}
+
+/* 档案刻度尺：比一条实线更像被抽出的封套 */
+.portfolio-unseal__ruler {
+  display: block;
+  height: 0.55rem;
+  margin: 0 0 0.85rem;
+  background:
+    repeating-linear-gradient(90deg, var(--unseal-line) 0 1px, transparent 1px 0.5rem) 0 100% / 100% 0.3rem no-repeat,
+    repeating-linear-gradient(90deg, var(--unseal-green) 0 1px, transparent 1px 4rem) 0 100% / 100% 0.55rem no-repeat,
+    linear-gradient(90deg, var(--unseal-line), transparent 82%) 0 100% / 100% 1px no-repeat;
+  mask-image: linear-gradient(90deg, #000 0 68%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0 68%, transparent 100%);
+}
+
+.portfolio-unseal__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #a7b4a2;
+  font-family: var(--mono);
+  font-size: var(--font-micro);
+  letter-spacing: 0.12em;
+}
+
+.portfolio-unseal__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--unseal-green);
+  white-space: nowrap;
+}
+
+.portfolio-unseal__status > i {
+  width: 0.42rem;
+  height: 0.42rem;
+  flex: 0 0 0.42rem;
+  background: var(--unseal-green);
+  animation: unseal-blink 720ms steps(2, jump-none) infinite;
+}
+
+.portfolio-unseal__spine {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 上下两条黄绿边线：arm 阶段由上方边线画出「封面到位」，
+   reveal 阶段由下方边线标记「内页露出」的推进位置。 */
+.portfolio-unseal__edge {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: var(--unseal-green);
+  box-shadow: 0 0 1.4rem color-mix(in srgb, var(--unseal-green) 70%, transparent);
+}
+
+.portfolio-unseal__edge--top {
+  top: 0;
+}
+
+.portfolio-unseal__edge--bottom {
+  bottom: 0;
+}
+
+@keyframes unseal-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* ---------- 四段式编排 ---------- */
+
+.portfolio-unseal[data-mode='arm'] .portfolio-unseal__leaf {
+  animation: unseal-rise 240ms cubic-bezier(0.66, 0, 0.2, 1) both;
+}
+
+.portfolio-unseal[data-mode='arm'] .portfolio-unseal__face {
+  animation: unseal-face-in 240ms cubic-bezier(0.66, 0, 0.2, 1) both;
+}
+
+.portfolio-unseal[data-mode='reveal'] .portfolio-unseal__leaf {
+  animation: unseal-away 420ms cubic-bezier(0.5, 0, 0.16, 1) both;
+}
+
+.portfolio-unseal[data-mode='reveal'] .portfolio-unseal__face {
+  animation: unseal-face-out 420ms cubic-bezier(0.5, 0, 0.16, 1) both;
+}
+
+.portfolio-unseal[data-mode='seal'] .portfolio-unseal__leaf {
+  animation: unseal-descend 200ms cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+
+.portfolio-unseal[data-mode='seal'] .portfolio-unseal__face {
+  animation: unseal-face-down 200ms cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+
+.portfolio-unseal[data-mode='release'] .portfolio-unseal__leaf {
+  animation: unseal-sink 320ms cubic-bezier(0.42, 0, 0.24, 1) both;
+}
+
+.portfolio-unseal[data-mode='release'] .portfolio-unseal__face {
+  animation: unseal-face-sink 320ms cubic-bezier(0.42, 0, 0.24, 1) both;
+}
+
+@keyframes unseal-rise {
+  from {
+    transform: translateY(102%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes unseal-face-in {
+  from {
+    transform: translateY(16%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes unseal-away {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-102%);
+  }
+}
+
+@keyframes unseal-face-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-12%);
+  }
+}
+
+@keyframes unseal-descend {
+  from {
+    transform: translateY(-102%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes unseal-face-down {
+  from {
+    transform: translateY(-14%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes unseal-sink {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(102%);
+  }
+}
+
+@keyframes unseal-face-sink {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(12%);
+  }
+}
+
+@media (width >= 768px) {
+  .portfolio-unseal__ruler {
+    margin: 1rem 0 1.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-unseal {
+    display: none;
+  }
+}
