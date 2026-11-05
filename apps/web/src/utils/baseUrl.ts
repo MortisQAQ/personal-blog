@@ -30,7 +30,7 @@ export const BASE_URL = resolveRuntimeBaseUrl(
 // 一旦调整 public 目录位置或重命名部署分支，必须同步修改此处与 index.html 中的首屏直链，
 // 否则线上会继续命中旧资源（详见 apps/web/README.md「CDN 路径同步约束」）。
 const CDN_BASE_URL =
-  "https://cdn.jsdmirror.com/gh/yukariyukaro/personal-blog@master/apps/web/public/";
+  "https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/";
 
 export const resolvePublicAsset = (assetPath: string) => {
   // 开发环境下仍使用本地路径，生产环境使用 CDN

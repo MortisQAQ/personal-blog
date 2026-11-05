@@ -88,15 +88,15 @@ public/               # 静态资源
 
 本项目使用 **jsDelivr 的 GitHub CDN**（免费、无流量限制）加速静态资源，并通过其国内镜像域名 `cdn.jsdmirror.com` 访问，兼顾国内访问速度。
 
-- **CDN 映射**：`https://cdn.jsdmirror.com/gh/yukariyukaro/personal-blog@master/apps/web/public/<path>` 对应仓库 `yukariyukaro/personal-blog` 的 `master` 分支 `apps/web/public/<path>` 文件。
+- **CDN 映射**：`https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/<path>` 对应仓库 `MortisQAQ/personal-blog` 的 `master` 分支 `apps/web/public/<path>` 文件。
 - **发布方式**：直接把 `apps/web/public/` 推到 `master` 即可，CDN 会自动命中，无需再往仓库根目录同步副本。
 - **统一入口**：`src/utils/baseUrl.ts` 的 `resolvePublicAsset(assetPath)`。
   - 开发环境：返回本地 `BASE_URL` 路径，便于本地调试。
-  - 生产环境：返回 `https://cdn.jsdmirror.com/gh/yukariyukaro/personal-blog@master/apps/web/public/` 前缀路径。
+  - 生产环境：返回 `https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/` 前缀路径。
 - **首屏硬编码直链**：`index.html` 中 React 挂载前就需要的资源（favicon、OG 图、预加载背景图、Loading 图）使用了硬编码 CDN 链接，保证 React 挂载前即可命中 CDN。
 - **字体独立仓库**：字体托管在另一个仓库 `yukariyukaro/mycdn`（目前只有未子集化的 `.ttf`，约 2.6MB），通过 `https://cdn.jsdmirror.com/gh/yukariyukaro/mycdn@main/SmileySans-Oblique.ttf` 加载。`cdn.jsdelivr.net` 在国内已无加速节点，因此字体同样走 jsdmirror，与图片保持同一个源（复用 `index.html` 里已有的 `preconnect`）。
 - **字体缓存策略**：jsdmirror 对 `@分支` 与 `@commit` 一律返回 `Cache-Control: public, max-age=300, stale-while-revalidate=86400`，即 5 分钟新鲜期 + 24 小时 stale-while-revalidate；回访时可直接用缓存字体，首访仍需完整下载约 2.6MB。
-- **缓存刷新**：jsDelivr 对 `@master` 分支内容有边缘缓存（默认最长约 12 小时更新）。更新文件后如需立即生效，可调用 jsDelivr Purge API：`https://purge.jsdelivr.net/gh/yukariyukaro/personal-blog@master/apps/web/public/<path>`。
+- **缓存刷新**：jsDelivr 对 `@master` 分支内容有边缘缓存（默认最长约 12 小时更新）。更新文件后如需立即生效，可调用 jsDelivr Purge API：`https://purge.jsdelivr.net/gh/MortisQAQ/personal-blog@master/apps/web/public/<path>`。
 
 #### ⚠️ CDN 路径同步约束（必须遵守）
 
@@ -111,7 +111,7 @@ public/               # 静态资源
    - 移动 / 重命名 `apps/web/public/`（例如再次调整 monorepo 层级）
    - 更换部署分支（当前为 `master`，历史上曾用 `main`）
 3. **验证方法**（改完后必须实测，任一项返回非 200 即为未生效）
-   - `curl -I "https://cdn.jsdmirror.com/gh/yukariyukaro/personal-blog@master/apps/web/public/home/hls/index.m3u8"`
+   - `curl -I "https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/home/hls/index.m3u8"`
    - 对照 `dist/` 中同名文件，确认 CDN 返回内容与本地构建产物一致
 
 > 历史教训：应用从仓库根目录迁移到 `apps/web/` 后，CDN 前缀仍停留在 `@main/public/`，导致线上长期加载旧结构下的旧视频与旧图片，而本地 dev 一切正常。
