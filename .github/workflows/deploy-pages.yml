@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # 构建期显式指定项目站点子路径，避免依赖 process.env 探测（Vite 8 下不可靠）
+      VITE_BASE_URL: /${{ github.event.repository.name }}/
     defaults:
       run:
         working-directory: apps/web
