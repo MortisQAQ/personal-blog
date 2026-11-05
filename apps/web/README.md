@@ -94,7 +94,7 @@ public/               # 静态资源
   - 开发环境：返回本地 `BASE_URL` 路径，便于本地调试。
   - 生产环境：返回 `https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/` 前缀路径。
 - **首屏硬编码直链**：`index.html` 中 React 挂载前就需要的资源（favicon、OG 图、预加载背景图、Loading 图）使用了硬编码 CDN 链接，保证 React 挂载前即可命中 CDN。
-- **字体独立仓库**：字体托管在另一个仓库 `yukariyukaro/mycdn`（目前只有未子集化的 `.ttf`，约 2.6MB），通过 `https://cdn.jsdmirror.com/gh/yukariyukaro/mycdn@main/SmileySans-Oblique.ttf` 加载。`cdn.jsdelivr.net` 在国内已无加速节点，因此字体同样走 jsdmirror，与图片保持同一个源（复用 `index.html` 里已有的 `preconnect`）。
+- **字体独立仓库**：字体托管在另一个仓库 `MortisQAQ/mycdn`（目前只有未子集化的 `.ttf`，约 2.6MB），通过 `https://cdn.jsdmirror.com/gh/MortisQAQ/mycdn@main/SmileySans-Oblique.ttf` 加载。`cdn.jsdelivr.net` 在国内已无加速节点，因此字体同样走 jsdmirror，与图片保持同一个源（复用 `index.html` 里已有的 `preconnect`）。
 - **字体缓存策略**：jsdmirror 对 `@分支` 与 `@commit` 一律返回 `Cache-Control: public, max-age=300, stale-while-revalidate=86400`，即 5 分钟新鲜期 + 24 小时 stale-while-revalidate；回访时可直接用缓存字体，首访仍需完整下载约 2.6MB。
 - **缓存刷新**：jsDelivr 对 `@master` 分支内容有边缘缓存（默认最长约 12 小时更新）。更新文件后如需立即生效，可调用 jsDelivr Purge API：`https://purge.jsdelivr.net/gh/MortisQAQ/personal-blog@master/apps/web/public/<path>`。
 
@@ -105,7 +105,7 @@ public/               # 静态资源
 1. **需要同步的引用位置**
    - `src/utils/baseUrl.ts` → `CDN_BASE_URL`
    - `index.html` → favicon、`og:image`、`twitter:image`、`#global-loading` 的 `<img>`
-   - `index.html` → 字体 `preload` 与 `@font-face`（指向另一个仓库 `yukariyukaro/mycdn@main`，迁移字体仓库或分支时这两处都要改）
+   - `index.html` → 字体 `preload` 与 `@font-face`（指向另一个仓库 `MortisQAQ/mycdn@main`，迁移字体仓库或分支时这两处都要改）
    - 本文档的「CDN 映射」一节
 2. **会触发同步的事件**
    - 移动 / 重命名 `apps/web/public/`（例如再次调整 monorepo 层级）
