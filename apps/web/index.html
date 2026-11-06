@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/miku.svg" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%miku.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- SEO Meta Tags -->
@@ -16,7 +16,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="娄宿三的个人博客" />
     <meta property="og:description" content="个人博客，二次元游戏官网风格。" />
-    <meta property="og:image" content="https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/home/home.webp" />
+    <meta property="og:image" content="%BASE_URL%home/home.webp" />
     <meta property="og:url" content="" />
     <meta property="og:locale" content="zh_CN" />
 
@@ -24,22 +24,22 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="个人博客" />
     <meta name="twitter:description" content="娄宿三的个人博客，二次元游戏官网风格。" />
-    <meta name="twitter:image" content="https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/home/home.webp" />
+    <meta name="twitter:image" content="%BASE_URL%home/home.webp" />
 
     <!-- 主题色 (浏览器地址栏颜色) -->
     <meta name="theme-color" content="#39C5BB" />
     <meta name="msapplication-TileColor" content="#39C5BB" />
 
     <link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin="anonymous">
-    <!-- 预加载自定义字体：与 preconnect 同源（jsdmirror 国内镜像），并提权到 high -->
-    <link rel="preload" href="https://cdn.jsdmirror.com/gh/MortisQAQ/mycdn@main/SmileySans-Oblique.ttf" as="font" type="font/ttf" crossorigin="anonymous" fetchpriority="high">
+    <!-- 预加载自定义字体：站内自托管，随站点一起部署，不依赖任何第三方 CDN -->
+    <link rel="preload" href="%BASE_URL%fonts/SmileySans-Oblique.ttf" as="font" type="font/ttf" crossorigin="anonymous" fetchpriority="high">
     <!-- 导航英文专用：Oswald Medium（方舟官网同款窄体，同字号下宽度约为普通无衬线体一半） -->
     <link rel="preload" href="https://cdn.jsdmirror.com/npm/@fontsource/oswald@5.2.5/files/oswald-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high">
     <style>
       /* 全局 Loading 关键样式 */
       @font-face {
         font-family: 'SmileySans';
-        src: url('https://cdn.jsdmirror.com/gh/MortisQAQ/mycdn@main/SmileySans-Oblique.ttf') format('truetype');
+        src: url('%BASE_URL%fonts/SmileySans-Oblique.ttf') format('truetype');
         font-display: swap;
       }
       /* 导航英文窄体：仅拉丁字符，失败时回退系统无衬线 */
@@ -184,7 +184,7 @@
     <!-- 全局 Loading DOM -->
     <div id="global-loading" aria-label="Loading" role="status" aria-live="polite">
       <div class="loading-container">
-        <img class="loading-image" src="https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/loading-chicong.webp" alt="loading" />
+        <img class="loading-image" src="%BASE_URL%loading-chicong.webp" alt="loading" />
         <div class="loading-text-container">
           <div class="loading-title-wrapper">
             <h1 class="loading-title">

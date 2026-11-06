@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 // 字体与首屏视频都保持 pending：旧实现会把 Loading 拖到超时才揭开，
 // 新实现只等路由页面就绪，资源未返回也应立即进入过渡动画。
-const HOLD_FONT = /cdn\.jsdmirror\.com\/.*(?:SmileySans|oswald)/
+const HOLD_FONT = /(?:\/fonts\/SmileySans|cdn\.jsdmirror\.com\/.*(?:SmileySans|oswald))/
 const HOLD_HERO_MEDIA = /\/home\/(hls\/|home-vp9\.webm)/
 
 async function holdFontsAndHeroMedia(page: Page) {

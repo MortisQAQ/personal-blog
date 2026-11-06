@@ -25,17 +25,9 @@ export const BASE_URL = resolveRuntimeBaseUrl(
   normalizeBaseUrl(import.meta.env.BASE_URL),
 );
 
-// 使用 jsDelivr 镜像加速静态资源加载
-// 该前缀必须与 apps/web/public/ 的实际路径保持一致：
-// 一旦调整 public 目录位置或重命名部署分支，必须同步修改此处与 index.html 中的首屏直链，
-// 否则线上会继续命中旧资源（详见 apps/web/README.md「CDN 路径同步约束」）。
-const CDN_BASE_URL =
-  "https://cdn.jsdmirror.com/gh/MortisQAQ/personal-blog@master/apps/web/public/";
-
-export const resolvePublicAsset = (assetPath: string) => {
-  // 开发环境下仍使用本地路径，生产环境使用 CDN
-  if (import.meta.env.DEV) {
-    return `${BASE_URL}${assetPath.replace(/^\/+/, "")}`;
-  }
-  return `${CDN_BASE_URL}${assetPath.replace(/^\/+/, "")}`;
-};
+// 站内静态资源一律同源解析（GitHub Pages 的子路径由 BASE_URL 提供）。
+// 这里不要写死任何 CDN 前缀：一旦 URL 里带上 GitHub 所有者/仓库名或自定义域名，
+// 换账号、改仓库名、换部署域名都会让全站图片静默 404，而代码里看不出问题。
+// 需要加速时应在部署层（自定义域名 / CDN 回源）解决，不要写进构建期常量。
+export const resolvePublicAsset = (assetPath: string) =>
+  `${BASE_URL}${assetPath.replace(/^\/+/, "")}`;
