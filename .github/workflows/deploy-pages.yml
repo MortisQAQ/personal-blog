@@ -18,15 +18,22 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # 构建期显式指定项目站点子路径，避免依赖 process.env 探测（Vite 8 下不可靠）
-      VITE_BASE_URL: /${{ github.event.repository.name }}/
     defaults:
       run:
         working-directory: apps/web
     steps:
       - name: 检出仓库
         uses: actions/checkout@v6
+
+      - name: 解析站点 base 路径
+        # 有自定义域名（public/CNAME 存在）→ 站点在根路径 /；否则是项目页子路径 /<repo>/
+        # 写进 GITHUB_ENV，避免依赖 Vite 配置里读 process.env（Vite 8 下不可靠）
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "VITE_BASE_URL=/" >> "$GITHUB_ENV"
+          else
+            echo "VITE_BASE_URL=/${{ github.event.repository.name }}/" >> "$GITHUB_ENV"
+          fi
 
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
